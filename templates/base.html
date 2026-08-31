@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="{{ site.language }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ site.title }}{% endblock %}</title>
+<meta name="description" content="{% block description %}{{ site.description }}{% endblock %}">
+<link rel="canonical" href="{{ canonical_url }}">
+<link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ site.base_url }}feed.xml">
+<link rel="stylesheet" href="{{ asset('static/style.css') }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{% block og_title %}{{ site.title }}{% endblock %}">
+<meta property="og:description" content="{% block og_description %}{{ site.description }}{% endblock %}">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta name="twitter:card" content="summary">
+{% if site.monetization.adsense_client_id %}
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ site.monetization.adsense_client_id }}" crossorigin="anonymous"></script>
+{% endif %}
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="{{ site.base_url }}">{{ site.title }}</a>
+    <p class="tagline">{{ site.description }}</p>
+  </div>
+</header>
+
+<main class="wrap content">
+{% block content %}{% endblock %}
+</main>
+
+<aside class="wrap ad-slot">
+  <!-- 広告/アフィリエイト枠(審査通過後にここへ実際のコード・リンクを設置) -->
+  {% if site.monetization.adsense_client_id %}
+  <ins class="adsbygoogle" style="display:block" data-ad-client="{{ site.monetization.adsense_client_id }}" data-ad-slot="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  {% endif %}
+</aside>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <nav class="footer-nav">
+      <a href="{{ site.base_url }}">記事一覧</a>
+      <a href="{{ site.base_url }}about/">運営者情報</a>
+      <a href="{{ site.base_url }}privacy/">プライバシーポリシー</a>
+      <a href="{{ site.base_url }}contact/">お問い合わせ</a>
+    </nav>
+    <p>{{ site.monetization.affiliate_disclosure }}</p>
+    <p>本サイトの記事は生成AIの支援を受けて作成しています。内容には万全を期していますが、最新情報は各公式サイト等でご確認ください。</p>
+    <p>&copy; {{ year }} {{ site.author }}</p>
+  </div>
+</footer>
+</body>
+</html>

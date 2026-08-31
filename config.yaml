@@ -1,0 +1,22 @@
+# サイト全体の設定
+site:
+  title: "AIとガジェットの使い方ラボ"
+  description: "AIツール・アプリ・ガジェットを使いこなすための実践Tipsを毎日発信するブログ"
+  # GitHub Pagesで公開する場合、最終的なURLに書き換えてください
+  # 例: https://<username>.github.io/<repo>/
+  base_url: "https://ai-gadget-lab.github.io/"
+  language: "ja"
+  author: "AIとガジェットの使い方ラボ 編集部"
+  # お問い合わせ用メールアドレス
+  contact_email: "aigadgetlab@proton.me"
+  # AdSenseやアフィリエイトの審査が通ったら、ここにコードやリンクを追加していきます
+  monetization:
+    adsense_client_id: "ca-pub-4485176465052867"
+    affiliate_disclosure: "本サイトの記事内には広告・アフィリエイトリンクが含まれる場合があります。"
+
+# 記事生成の設定
+generation:
+  posts_per_run: 1
+  min_words: 900
+  max_words: 1600
+  model: "gemini-3.6-flash"

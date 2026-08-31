@@ -1,0 +1,143 @@
+:root {
+  --bg: #0f1115;
+  --surface: #171a21;
+  --surface-2: #1f2430;
+  --text: #e8eaf0;
+  --text-dim: #9aa2b1;
+  --accent: #6ee7b7;
+  --accent-2: #60a5fa;
+  --border: #2a2f3a;
+  --radius: 14px;
+  --max-width: 780px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Hiragino Sans", "Noto Sans JP", "Segoe UI", system-ui, sans-serif;
+  line-height: 1.8;
+}
+
+.wrap {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.site-header {
+  padding: 40px 0 28px;
+  background: linear-gradient(135deg, var(--surface), var(--surface-2));
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text);
+  text-decoration: none;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.tagline {
+  color: var(--text-dim);
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+}
+
+.content { padding: 40px 0; min-height: 50vh; }
+
+.post-card {
+  padding: 22px;
+  margin-bottom: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-2);
+}
+
+.post-card h2 { margin: 0 0 6px; font-size: 1.15rem; }
+.post-card h2 a { color: var(--text); text-decoration: none; }
+.post-card h2 a:hover { color: var(--accent-2); }
+
+.meta { color: var(--text-dim); font-size: 0.85rem; margin: 0 0 10px; }
+.excerpt { color: var(--text-dim); margin: 0 0 10px; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: rgba(110, 231, 183, 0.08);
+  border: 1px solid rgba(110, 231, 183, 0.25);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.post h1 { font-size: 1.8rem; line-height: 1.4; margin-bottom: 6px; }
+.post-body h2 {
+  font-size: 1.3rem;
+  margin-top: 2em;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.post-body h3 { font-size: 1.1rem; margin-top: 1.6em; color: var(--accent-2); }
+.post-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.2em 0;
+  font-size: 0.92rem;
+}
+.post-body th, .post-body td {
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  text-align: left;
+}
+.post-body th { background: var(--surface-2); }
+.post-body code {
+  background: var(--surface-2);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+.post-body a { color: var(--accent-2); }
+
+.back-link { margin-top: 2.5em; }
+.back-link a { color: var(--text-dim); text-decoration: none; }
+.back-link a:hover { color: var(--accent-2); }
+
+.ad-slot { padding: 10px 0 0; min-height: 1px; }
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 24px 0 40px;
+  color: var(--text-dim);
+  font-size: 0.82rem;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.footer-nav a {
+  color: var(--text-dim);
+  text-decoration: none;
+}
+
+.footer-nav a:hover { color: var(--accent-2); }
+
+.static-page .post-body h2 { margin-top: 1.6em; }
+.static-page .post-body ul { padding-left: 1.2em; }
+.static-page .post-body li { margin-bottom: 0.4em; }
