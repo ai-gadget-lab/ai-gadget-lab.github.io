@@ -19,6 +19,7 @@ import json
 import os
 import re
 import sys
+import time
 import unicodedata
 from pathlib import Path
 
@@ -29,6 +30,55 @@ CONTENT_DIR = ROOT / "content" / "posts"
 CONFIG_PATH = ROOT / "config.yaml"
 TOPICS_SEED_PATH = Path(__file__).resolve().parent / "topics_seed.yaml"
 TOPICS_STATE_PATH = Path(__file__).resolve().parent / "topics_state.json"
+# 混雑や廃止で主モデルが使えないとき、この順で切り替える
+FALLBACK_MODELS = [
+    "gemini-3.6-flash",
+    "gemini-3.5-flash",
+    "gemini-flash-latest",
+]
+
+
+def generate_content(client, model_name: str, contents: str):
+    """一時的な混雑(503)や上限(429)は待って再試行し、モデル廃止時は次のモデルに切り替える。"""
+    models = [model_name] + [name for name in FALLBACK_MODELS if name != model_name]
+    last_error: Exception | None = None
+
+    for model in models:
+        for attempt in range(1, 4):
+            try:
+                response = client.models.generate_content(model=model, contents=contents)
+                if model != model_name:
+                    print(f"モデルを {model} に切り替えて生成しました", file=sys.stderr)
+                return response
+            except Exception as exc:
+                last_error = exc
+                message = str(exc)
+                unavailable = any(
+                    token in message
+                    for token in ("503", "429", "500", "502", "504", "UNAVAILABLE", "RESOURCE_EXHAUSTED")
+                )
+                retired = any(
+                    token in message
+                    for token in ("404", "NOT_FOUND", "no longer available", "not found")
+                )
+                if retired:
+                    print(f"モデル {model} は利用できないため次を試します", file=sys.stderr)
+                    break
+                if not unavailable or attempt == 3:
+                    if not unavailable:
+                        raise
+                    print(f"モデル {model} は再試行上限に達したため次を試します", file=sys.stderr)
+                    break
+                wait = 25 * attempt
+                print(
+                    f"{model} が一時的に失敗しました ({attempt}/3)。{wait}秒後に再試行します。",
+                    file=sys.stderr,
+                )
+                time.sleep(wait)
+
+    if last_error is not None:
+        raise last_error
+    raise RuntimeError("記事生成に失敗しました")
 
 
 def load_config() -> dict:
@@ -72,13 +122,16 @@ def pick_next_topic(state: dict, client=None, model_name: str | None = None) -> 
         # フォールバック: プール空 & AIなしの場合は連番トピックを作る
         return f"AIとガジェット活用の新しいアイデア #{len(used) + 1}"
 
+    recent = "\n".join(f"- {topic}" for topic in state["used_topics"][-30:])
     prompt = (
         "あなたは日本語のテックブログの編集者です。"
         "「AIツール・アプリ・ガジェットの活用術」という分野で、"
         "まだ記事化されていない具体的で検索されやすい記事タイトル案を10個、"
-        "日本語で、1行に1つずつ、番号や記号なしで出力してください。"
+        "日本語で、1行に1つずつ、番号や記号なしで出力してください。\n"
+        "次の既存タイトルと同じテーマ・同じ製品の言い換えは避けてください。\n"
+        f"{recent}"
     )
-    response = client.models.generate_content(model=model_name, contents=prompt)
+    response = generate_content(client, model_name, prompt)
     candidates = [line.strip("・-1234567890. 　") for line in response.text.splitlines() if line.strip()]
     candidates = [c for c in candidates if c and c not in used]
     if not candidates:
@@ -114,7 +167,7 @@ def build_prompt(topic: str, min_words: int, max_words: int) -> str:
 
 def call_gemini(topic: str, min_words: int, max_words: int, model_name: str, client):
     prompt = build_prompt(topic, min_words, max_words)
-    response = client.models.generate_content(model=model_name, contents=prompt)
+    response = generate_content(client, model_name, prompt)
     text = response.text.strip()
 
     lines = text.splitlines()

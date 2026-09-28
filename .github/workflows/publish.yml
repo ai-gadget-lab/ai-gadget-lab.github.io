@@ -10,6 +10,10 @@ on:
         description: "新しい記事を生成する"
         type: boolean
         default: true
+      count:
+        description: "生成する記事数(1〜5)。定期実行は常に1本"
+        type: number
+        default: 1
   push:
     branches: [main]
 
@@ -46,7 +50,19 @@ jobs:
         if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.generate)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python scripts/generate_post.py
+        run: |
+          count=1
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            count="${{ inputs.count }}"
+          fi
+          if ! [[ "$count" =~ ^[0-9]+$ ]] || [ "$count" -lt 1 ] || [ "$count" -gt 5 ]; then
+            echo "count は 1〜5 で指定してください"
+            exit 1
+          fi
+          for i in $(seq 1 "$count"); do
+            echo "=== ${i}/${count} ==="
+            python scripts/generate_post.py
+          done
 
       - name: Commit generated content
         run: |
