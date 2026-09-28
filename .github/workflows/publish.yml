@@ -59,10 +59,21 @@ jobs:
             echo "count は 1〜5 で指定してください"
             exit 1
           fi
+          set +e
+          ok=0
           for i in $(seq 1 "$count"); do
             echo "=== ${i}/${count} ==="
             python scripts/generate_post.py
+            if [ $? -eq 0 ]; then
+              ok=1
+            else
+              echo "記事 ${i} の生成に失敗しました。成功した分だけ公開します。"
+            fi
           done
+          set -e
+          if [ "$ok" = 0 ]; then
+            exit 1
+          fi
 
       - name: Commit generated content
         run: |

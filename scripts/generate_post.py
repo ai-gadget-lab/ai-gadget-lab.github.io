@@ -35,6 +35,8 @@ FALLBACK_MODELS = [
     "gemini-3.6-flash",
     "gemini-3.5-flash",
     "gemini-flash-latest",
+    "gemini-flash-lite-latest",
+    "gemini-3.1-flash-lite",
 ]
 
 
@@ -44,7 +46,7 @@ def generate_content(client, model_name: str, contents: str):
     last_error: Exception | None = None
 
     for model in models:
-        for attempt in range(1, 4):
+        for attempt in range(1, 3):
             try:
                 response = client.models.generate_content(model=model, contents=contents)
                 if model != model_name:
@@ -64,14 +66,14 @@ def generate_content(client, model_name: str, contents: str):
                 if retired:
                     print(f"モデル {model} は利用できないため次を試します", file=sys.stderr)
                     break
-                if not unavailable or attempt == 3:
+                if not unavailable or attempt == 2:
                     if not unavailable:
                         raise
                     print(f"モデル {model} は再試行上限に達したため次を試します", file=sys.stderr)
                     break
-                wait = 25 * attempt
+                wait = 20
                 print(
-                    f"{model} が一時的に失敗しました ({attempt}/3)。{wait}秒後に再試行します。",
+                    f"{model} が一時的に失敗しました ({attempt}/2)。{wait}秒後に再試行します。",
                     file=sys.stderr,
                 )
                 time.sleep(wait)
