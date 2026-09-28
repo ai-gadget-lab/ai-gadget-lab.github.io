@@ -11,7 +11,11 @@ site:
   contact_email: "aigadgetlab@proton.me"
   # AdSenseやアフィリエイトの審査が通ったら、ここにコードやリンクを追加していきます
   monetization:
+    # 発行者ID。Googleアカウントのメールを変えてもこの値は変わらない。
+    # 別のAdSenseアカウントを作り直した場合だけ、新しい ca-pub- に差し替える。
     adsense_client_id: "ca-pub-4485176465052867"
+    # 手動広告ユニットの数字ID。空なら自動広告(headのスクリプト)のみ。
+    adsense_slot_id: ""
     affiliate_disclosure: "本サイトの記事内には広告・アフィリエイトリンクが含まれる場合があります。"
 
 # 記事生成の設定

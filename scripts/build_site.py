@@ -149,9 +149,9 @@ def write_robots(site: dict) -> None:
 
 def write_ads_txt(site: dict) -> None:
     client_id = site.get("monetization", {}).get("adsense_client_id", "")
-    if not client_id:
+    if not client_id.startswith("ca-pub-"):
         return
-    pub_id = client_id.replace("ca-", "")
+    pub_id = client_id.removeprefix("ca-")
     text = f"google.com, {pub_id}, DIRECT, f08c47fec0942fa0\n"
     (OUTPUT_DIR / "ads.txt").write_text(text, encoding="utf-8")
 
