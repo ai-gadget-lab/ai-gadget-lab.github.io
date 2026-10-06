@@ -48,9 +48,8 @@
     "Suno AIでYouTubeやポッドキャストの商用オリジナルBGMを作曲するプロンプトテクニック",
     "SwitchBotとスマートスピーカーで実現する帰宅ルーティン全自動化と音声操作ガイド",
     "v0 by Vercelでプロトタイプ作成からUIデザインとReactコードを即座に生成する活用術",
-    "ElevenLabsで自分の声を学習させて多言語ナレーション動画を効率的に作成する方法"
-  ],
-  "extra_topics": [
+    "ElevenLabsで自分の声を学習させて多言語ナレーション動画を効率的に作成する方法",
     "Apple Intelligenceの文章校正と写真クリーンアップ機能をiPhoneで使いこなす設定ガイド"
-  ]
+  ],
+  "extra_topics": []
 }
